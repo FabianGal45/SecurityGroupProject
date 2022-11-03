@@ -17,6 +17,10 @@ public class DiarySecureApp {
     public static void main(String[] args) {
         // TODO code application logic here
         //TESTTTTTTTT
+        //TEST LINE BY CHRIS
+        //TEST LINE BY CHRIS TWO
+        //TEST LINE BY CHRIS THREE
+        
     }
     
 }
