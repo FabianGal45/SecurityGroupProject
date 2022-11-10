@@ -16,6 +16,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -43,14 +44,15 @@ public class AES {
     }
 
     public static IvParameterSpec generateIv() {                                        //Generates initialisation vector
-        byte[] iv = new byte[16];
-        new SecureRandom().nextBytes(iv);
-        return new IvParameterSpec(iv);
+        byte[] iv = new byte[16];                                                       //creates a byte array
+        new SecureRandom().nextBytes(iv);                                          //adds random integers
+        System.out.println(iv);                                                       //prints out the random ints DELETE WHEN FINISHED
+        return new IvParameterSpec(iv);                                            //return it as the IV
     }
 
-    public String encrypt(String algorithm, String input, SecretKey key,                            //needs algorithm, input and key
+    public String encrypt(String algorithm, String input, SecretKey key, //needs algorithm, input and key
             IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException,                                //idk why but it likes to throw alot of exceptions
+            InvalidAlgorithmParameterException, InvalidKeyException, //idk why but it likes to throw alot of exceptions
             BadPaddingException, IllegalBlockSizeException {                                        //ignore this
 
         Cipher cipher = Cipher.getInstance(algorithm);
@@ -75,13 +77,34 @@ public class AES {
     public String getEncryptedInput() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         key = generateKey(128);
         ivParameterSpec = generateIv();
+        System.out.println(ivParameterSpec+" THIS IS IT!!!!!");
         algorithm = "AES/CBC/PKCS5Padding";
         return encrypt(algorithm, input, key, ivParameterSpec);
     }
-    
-    public String getKey(){
+
+    public String getKey() {
         byte encoded[] = key.getEncoded();
         String encodedKey = Base64.getEncoder().encodeToString(encoded);
+        
+//        byte encodedIV[] = ivParameterSpec.getEncoded();
+//        String encodedIVID = Base64.getEncoder().encodeToString(encodedIV);
         return encodedKey;
     }
+
+    public String getDecryptedInput(String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        byte[] decoded = key.getBytes();
+        SecretKey Okey = new SecretKeySpec(decoded, 0, decoded.length, "AES");
+        
+        
+        System.out.println(Okey);       //TEST PRINT, DELETE LATER
+        
+
+        ivParameterSpec = generateIv();
+        algorithm = "AES/CBC/PKCS5Padding";
+        return decrypt(algorithm, input, Okey, ivParameterSpec);
+    }
 }
+
+//ivParameterSpec = generateIv();
+//        algorithm = "AES/CBC/PKCS5Padding";
+//        return decrypt(algorithm, input, Okey, ivParameterSpec);

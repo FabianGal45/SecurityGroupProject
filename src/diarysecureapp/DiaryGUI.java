@@ -27,6 +27,9 @@ public class DiaryGUI extends javax.swing.JFrame {
         initComponents();
     }
     String message = "";
+    String aesMessage = "";
+    String Okey = "";
+    String Ukey="";
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,36 +40,24 @@ public class DiaryGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         diaryLBL = new javax.swing.JLabel();
-        inputTF = new javax.swing.JTextField();
         inputLBL = new javax.swing.JLabel();
-        outputTF = new javax.swing.JTextField();
         loadBTN = new java.awt.Button();
         outputLBL = new javax.swing.JLabel();
         encryptBTN = new java.awt.Button();
         saveBTN = new java.awt.Button();
         decryptBTN = new java.awt.Button();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        inputTF = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        outputTF = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         diaryLBL.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
         diaryLBL.setText("Diary");
 
-        inputTF.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        inputTF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputTFActionPerformed(evt);
-            }
-        });
-
         inputLBL.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         inputLBL.setText("Input");
-
-        outputTF.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        outputTF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputTFActionPerformed(evt);
-            }
-        });
 
         loadBTN.setLabel("Load");
         loadBTN.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +90,15 @@ public class DiaryGUI extends javax.swing.JFrame {
             }
         });
 
+        inputTF.setColumns(20);
+        inputTF.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        inputTF.setRows(5);
+        jScrollPane1.setViewportView(inputTF);
+
+        outputTF.setColumns(20);
+        outputTF.setRows(5);
+        jScrollPane2.setViewportView(outputTF);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,9 +107,9 @@ public class DiaryGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(inputTF, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
-                            .addComponent(outputTF))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(encryptBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -134,35 +134,30 @@ public class DiaryGUI extends javax.swing.JFrame {
                 .addComponent(diaryLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17)
                 .addComponent(inputLBL)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(inputTF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(encryptBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(saveBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(55, 55, 55)
+                        .addComponent(saveBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputLBL)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(outputTF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(loadBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(decryptBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                        .addGap(11, 11, 11)
+                        .addComponent(decryptBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 60, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void inputTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTFActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inputTFActionPerformed
-
-    private void outputTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputTFActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_outputTFActionPerformed
 
     private void loadBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBTNActionPerformed
         // TODO add your handling code here:
@@ -172,7 +167,9 @@ public class DiaryGUI extends javax.swing.JFrame {
         message = inputTF.getText();
         AES a = new AES(message);
         try {
-            outputTF.setText(a.getEncryptedInput());
+            aesMessage = a.getEncryptedInput();
+            Okey = a.getKey();
+            outputTF.setText("Message - "+aesMessage+"\nKey is: "+Okey);
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -187,7 +184,6 @@ public class DiaryGUI extends javax.swing.JFrame {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        JOptionPane.showMessageDialog(null,"Your Key is:\n"+ a.getKey());
     }//GEN-LAST:event_encryptBTNActionPerformed
 
     private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
@@ -195,7 +191,23 @@ public class DiaryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_saveBTNActionPerformed
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
-        // TODO add your handling code here:
+        Ukey = JOptionPane.showInputDialog(null,"Please enter your key:\n");
+        AES a = new AES();
+        try {
+            JOptionPane.showMessageDialog(null,a.getDecryptedInput(Ukey));
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidAlgorithmParameterException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_decryptBTNActionPerformed
 
     /**
@@ -238,10 +250,12 @@ public class DiaryGUI extends javax.swing.JFrame {
     private javax.swing.JLabel diaryLBL;
     private java.awt.Button encryptBTN;
     private javax.swing.JLabel inputLBL;
-    private javax.swing.JTextField inputTF;
+    private javax.swing.JTextArea inputTF;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private java.awt.Button loadBTN;
     private javax.swing.JLabel outputLBL;
-    private javax.swing.JTextField outputTF;
+    private javax.swing.JTextArea outputTF;
     private java.awt.Button saveBTN;
     // End of variables declaration//GEN-END:variables
 }
