@@ -168,7 +168,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         AES a = new AES(message);
         try {
             aesMessage = a.getEncryptedInput();
-            Okey = a.getKey();
+            Okey = a.getKey();  //
             outputTF.setText("Message - "+aesMessage+"\nKey is: "+Okey);
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
