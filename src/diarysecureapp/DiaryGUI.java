@@ -4,6 +4,16 @@
  */
 package diarysecureapp;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author cummi
@@ -16,7 +26,7 @@ public class DiaryGUI extends javax.swing.JFrame {
     public DiaryGUI() {
         initComponents();
     }
-
+    String message = "";
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,35 +36,35 @@ public class DiaryGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        headerLabel = new javax.swing.JLabel();
-        unencryptedEntry = new javax.swing.JTextField();
-        inputLabel = new javax.swing.JLabel();
-        encryptedText = new javax.swing.JTextField();
+        diaryLBL = new javax.swing.JLabel();
+        inputTF = new javax.swing.JTextField();
+        inputLBL = new javax.swing.JLabel();
+        outputTF = new javax.swing.JTextField();
         loadBTN = new java.awt.Button();
-        outputLabel = new javax.swing.JLabel();
+        outputLBL = new javax.swing.JLabel();
         encryptBTN = new java.awt.Button();
         saveBTN = new java.awt.Button();
         decryptBTN = new java.awt.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        headerLabel.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
-        headerLabel.setText("Diary");
+        diaryLBL.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
+        diaryLBL.setText("Diary");
 
-        unencryptedEntry.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        unencryptedEntry.addActionListener(new java.awt.event.ActionListener() {
+        inputTF.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        inputTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                unencryptedEntryActionPerformed(evt);
+                inputTFActionPerformed(evt);
             }
         });
 
-        inputLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        inputLabel.setText("Input");
+        inputLBL.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        inputLBL.setText("Input");
 
-        encryptedText.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        encryptedText.addActionListener(new java.awt.event.ActionListener() {
+        outputTF.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        outputTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                encryptedTextActionPerformed(evt);
+                outputTFActionPerformed(evt);
             }
         });
 
@@ -65,8 +75,8 @@ public class DiaryGUI extends javax.swing.JFrame {
             }
         });
 
-        outputLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        outputLabel.setText("Output");
+        outputLBL.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        outputLBL.setText("Output");
 
         encryptBTN.setLabel("Encrypt");
         encryptBTN.addActionListener(new java.awt.event.ActionListener() {
@@ -98,8 +108,8 @@ public class DiaryGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(unencryptedEntry, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
-                            .addComponent(encryptedText))
+                            .addComponent(inputTF, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+                            .addComponent(outputTF))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(encryptBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -108,34 +118,34 @@ public class DiaryGUI extends javax.swing.JFrame {
                             .addComponent(loadBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(298, 298, 298)
-                        .addComponent(headerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(diaryLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(inputLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inputLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(outputLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(outputLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(headerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(diaryLBL, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17)
-                .addComponent(inputLabel)
+                .addComponent(inputLBL)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(unencryptedEntry, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputTF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(encryptBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(saveBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputLabel)
+                .addComponent(outputLBL)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(encryptedText, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputTF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(loadBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -146,20 +156,38 @@ public class DiaryGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void unencryptedEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unencryptedEntryActionPerformed
+    private void inputTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTFActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_unencryptedEntryActionPerformed
+    }//GEN-LAST:event_inputTFActionPerformed
 
-    private void encryptedTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptedTextActionPerformed
+    private void outputTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputTFActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_encryptedTextActionPerformed
+    }//GEN-LAST:event_outputTFActionPerformed
 
     private void loadBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBTNActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_loadBTNActionPerformed
 
     private void encryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptBTNActionPerformed
-        // TODO add your handling code here:
+        message = inputTF.getText();
+        AES a = new AES(message);
+        try {
+            outputTF.setText(a.getEncryptedInput());
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidAlgorithmParameterException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        JOptionPane.showMessageDialog(null, a.getKey());
     }//GEN-LAST:event_encryptBTNActionPerformed
 
     private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
@@ -207,13 +235,13 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button decryptBTN;
+    private javax.swing.JLabel diaryLBL;
     private java.awt.Button encryptBTN;
-    private javax.swing.JTextField encryptedText;
-    private javax.swing.JLabel headerLabel;
-    private javax.swing.JLabel inputLabel;
+    private javax.swing.JLabel inputLBL;
+    private javax.swing.JTextField inputTF;
     private java.awt.Button loadBTN;
-    private javax.swing.JLabel outputLabel;
+    private javax.swing.JLabel outputLBL;
+    private javax.swing.JTextField outputTF;
     private java.awt.Button saveBTN;
-    private javax.swing.JTextField unencryptedEntry;
     // End of variables declaration//GEN-END:variables
 }
