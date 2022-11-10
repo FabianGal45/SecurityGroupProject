@@ -80,7 +80,8 @@ public class AES {
     }
     
     public String getKey(){
-        
-        return Base64.getEncoder().encodeToString(key.getEncoded());
+        byte encoded[] = key.getEncoded();
+        String encodedKey = Base64.getEncoder().encodeToString(encoded);
+        return encodedKey;
     }
 }

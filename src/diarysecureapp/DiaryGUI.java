@@ -187,7 +187,7 @@ public class DiaryGUI extends javax.swing.JFrame {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        JOptionPane.showMessageDialog(null, a.getKey());
+        JOptionPane.showMessageDialog(null,"Your Key is:\n"+ a.getKey());
     }//GEN-LAST:event_encryptBTNActionPerformed
 
     private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
