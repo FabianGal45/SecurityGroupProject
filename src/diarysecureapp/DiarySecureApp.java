@@ -65,6 +65,8 @@ public class DiarySecureApp {
        
         
         
+        DiaryGUI myGUI = new DiaryGUI();
+        myGUI.setVisible(true);
     }
     
 }
