@@ -26,15 +26,12 @@ public class AES {
 
     private SecretKey key;
     private IvParameterSpec ivParameterSpec;
-    private String algorithm, input;
+    private String algorithm;
 
     public AES() {
 
     }
 
-    public AES(String input) {
-        this.input = input;
-    }
 
     public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {        //Randomly generates a key
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
@@ -69,12 +66,12 @@ public class AES {
 
         Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.DECRYPT_MODE, key, iv);
-        byte[] plainText = cipher.doFinal(Base64.getDecoder()
-                .decode(cipherText));
+        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
         return new String(plainText);
     }
 
-    public String getEncryptedInput() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    //USE THIS ONE - Mark 
+    public String getEncryptedInput(String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         key = generateKey(128);
         ivParameterSpec = generateIv();
         System.out.println(ivParameterSpec+" THIS IS IT!!!!!");
@@ -91,7 +88,7 @@ public class AES {
         return encodedKey;
     }
 
-    public String getDecryptedInput(String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public String getDecryptedInput(String key, String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         byte[] decoded = key.getBytes();
         SecretKey Okey = new SecretKeySpec(decoded, 0, decoded.length, "AES");
         

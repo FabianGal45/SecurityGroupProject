@@ -29,7 +29,8 @@ public class DiaryGUI extends javax.swing.JFrame {
     String message = "";
     String aesMessage = "";
     String Okey = "";
-    String Ukey="";
+    String uKey="";
+    AES a = new AES();
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -165,9 +166,9 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     private void encryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptBTNActionPerformed
         message = inputTF.getText();
-        AES a = new AES(message);
+
         try {
-            aesMessage = a.getEncryptedInput();
+            aesMessage = a.getEncryptedInput(message);
             Okey = a.getKey();  //
             outputTF.setText("Message - "+aesMessage+"\nKey is: "+Okey);
         } catch (NoSuchPaddingException ex) {
@@ -191,10 +192,10 @@ public class DiaryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_saveBTNActionPerformed
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
-        Ukey = JOptionPane.showInputDialog(null,"Please enter your key:\n");
-        AES a = new AES();
+        uKey = JOptionPane.showInputDialog(null,"Please enter your key:\n");
+        String uMessage= JOptionPane.showInputDialog(null, "Please enter your message:\n");
         try {
-            JOptionPane.showMessageDialog(null,a.getDecryptedInput(Ukey));
+            JOptionPane.showMessageDialog(null,a.getDecryptedInput(uKey,uMessage));
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
