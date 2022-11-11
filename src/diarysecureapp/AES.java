@@ -4,10 +4,13 @@
  */
 package diarysecureapp;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,84 +27,46 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AES {
 
-    private SecretKey key;
-    private IvParameterSpec ivParameterSpec;
-    private String algorithm;
-
-    public AES() {
-
-    }
-
-
-    public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {        //Randomly generates a key
+    public static final int AES_KEY_SIZE = 256;
+    byte[] cipherText;
+    
+    public String encrypt(String message) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(n);
+
+        keyGenerator.init(AES_KEY_SIZE);
+
         SecretKey key = keyGenerator.generateKey();
-        return key;
-    }
 
-    public static IvParameterSpec generateIv() {                                        //Generates initialisation vector
-        byte[] iv = new byte[16];                                                       //creates a byte array
-        new SecureRandom().nextBytes(iv);                                          //adds random integers
-        System.out.println(iv);                                                       //prints out the random ints DELETE WHEN FINISHED
-        return new IvParameterSpec(iv);                                            //return it as the IV
-    }
+        SecretKeySpec my_keySpec = new SecretKeySpec(key.getEncoded(), "AES");
 
-    public String encrypt(String algorithm, String input, SecretKey key, //needs algorithm, input and key
-            IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException, //idk why but it likes to throw alot of exceptions
-            BadPaddingException, IllegalBlockSizeException {                                        //ignore this
-
-        Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-        byte[] cipherText = cipher.doFinal(input.getBytes());
-        return Base64.getEncoder()
-                .encodeToString(cipherText);
-    }
-
-    public static String decrypt(String algorithm, String cipherText, SecretKey key,
-            IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException,
-            BadPaddingException, IllegalBlockSizeException {
-
-        Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, key, iv);
-        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
-        return new String(plainText);
-    }
-
-    //USE THIS ONE - Mark 
-    public String getEncryptedInput(String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        key = generateKey(128);
-        ivParameterSpec = generateIv();
-        System.out.println(ivParameterSpec+" THIS IS IT!!!!!");
-        algorithm = "AES/CBC/PKCS5Padding";
-        return encrypt(algorithm, input, key, ivParameterSpec);
-    }
-
-    public String getKey() {
-        byte encoded[] = key.getEncoded();
-        String encodedKey = Base64.getEncoder().encodeToString(encoded);
+        Cipher my_cipher = Cipher.getInstance("AES/CTR/NoPadding");
+       
+        my_cipher.init(Cipher.ENCRYPT_MODE, my_keySpec);
+            
+        cipherText = my_cipher.doFinal(message.getBytes());
         
-//        byte encodedIV[] = ivParameterSpec.getEncoded();
-//        String encodedIVID = Base64.getEncoder().encodeToString(encodedIV);
-        return encodedKey;
+        String s = new String(cipherText, StandardCharsets.UTF_8);
+        
+        return s;
     }
+    
+    
+    
+    public String decrypt(String message) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException {
+        Cipher my_cipher = Cipher.getInstance("AES/CTR/NoPadding");
 
-    public String getDecryptedInput(String key, String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        byte[] decoded = key.getBytes();
-        SecretKey Okey = new SecretKeySpec(decoded, 0, decoded.length, "AES");
+        byte [] encodedParams = my_cipher.getParameters().getEncoded();
+        System.out.println(encodedParams.length);
+        System.out.println("IV = " + Arrays.toString(encodedParams));
+        System.out.println("Ciphertext = " + Arrays.toString(cipherText));
         
+        String d = new String(encodedParams);
         
-        System.out.println(Okey);       //TEST PRINT, DELETE LATER
+        return d;
         
-
-        ivParameterSpec = generateIv();
-        algorithm = "AES/CBC/PKCS5Padding";
-        return decrypt(algorithm, input, Okey, ivParameterSpec);
     }
+    
+    
+    
+    
 }
-
-//ivParameterSpec = generateIv();
-//        algorithm = "AES/CBC/PKCS5Padding";
-//        return decrypt(algorithm, input, Okey, ivParameterSpec);

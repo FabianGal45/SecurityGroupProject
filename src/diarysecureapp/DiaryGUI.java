@@ -4,6 +4,7 @@
  */
 package diarysecureapp;
 
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -168,16 +169,13 @@ public class DiaryGUI extends javax.swing.JFrame {
         message = inputTF.getText();
 
         try {
-            aesMessage = a.getEncryptedInput(message);
-            Okey = a.getKey();  //
-            outputTF.setText("Message - "+aesMessage+"\nKey is: "+Okey);
+            aesMessage = a.encrypt(message);
+            outputTF.setText("Message: "+aesMessage+"\nKey is: "+Okey);
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
+        }  catch (InvalidKeyException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalBlockSizeException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,21 +190,15 @@ public class DiaryGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_saveBTNActionPerformed
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
-        uKey = JOptionPane.showInputDialog(null,"Please enter your key:\n");
+
         String uMessage= JOptionPane.showInputDialog(null, "Please enter your message:\n");
         try {
-            JOptionPane.showMessageDialog(null,a.getDecryptedInput(uKey,uMessage));
+            JOptionPane.showMessageDialog(null,a.decrypt(uMessage));
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
+        }  catch (IOException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_decryptBTNActionPerformed
