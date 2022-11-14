@@ -74,7 +74,7 @@ public class AES {
     public String getEncryptedInput(String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         key = generateKey(128);
         ivParameterSpec = generateIv();
-        System.out.println(ivParameterSpec+" THIS IS IT!!!!!");
+        //System.out.println(ivParameterSpec+" THIS IS IT!!!!!");
         algorithm = "AES/CBC/PKCS5Padding";
         return encrypt(algorithm, input, key, ivParameterSpec);
     }
