@@ -4,6 +4,9 @@
  */
 package diarysecureapp;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -23,14 +26,16 @@ public class DiaryGUI extends javax.swing.JFrame {
     /**
      * Creates new form DiaryGUI
      */
-    public DiaryGUI() {
+    public DiaryGUI() throws NoSuchAlgorithmException {
         initComponents();
+        
     }
     String message = "";
     String aesMessage = "";
     String Okey = "";
-    String uKey="";
+    String uKey = "";
     AES a = new AES();
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -170,21 +175,16 @@ public class DiaryGUI extends javax.swing.JFrame {
         try {
             aesMessage = a.getEncryptedInput(message);
             Okey = a.getKey();  //
-            outputTF.setText("Message - "+aesMessage+"\nKey is: "+Okey);
-        } catch (NoSuchPaddingException ex) {
+            outputTF.setText("Message - " + aesMessage + "\n");
+            JOptionPane.showMessageDialog(null, "The key is: " + Okey+"\nThe key was saved to your clipboard");
+            StringSelection stringSelection = new StringSelection(Okey);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
-        
+
     }//GEN-LAST:event_encryptBTNActionPerformed
 
     private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
@@ -193,20 +193,9 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
         uKey = JOptionPane.showInputDialog(null,"Please enter your key:\n");
-        String uMessage= JOptionPane.showInputDialog(null, "Please enter your message:\n");
         try {
-            JOptionPane.showMessageDialog(null,a.getDecryptedInput(uKey,uMessage));
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
+            JOptionPane.showMessageDialog(null, a.getDecryptedInput(uKey, aesMessage));
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_decryptBTNActionPerformed
@@ -241,7 +230,11 @@ public class DiaryGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DiaryGUI().setVisible(true);
+                try {
+                    new DiaryGUI().setVisible(true);
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

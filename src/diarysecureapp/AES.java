@@ -28,10 +28,11 @@ public class AES {
     private IvParameterSpec ivParameterSpec;
     private String algorithm;
 
-    public AES() {
-
+    public AES() throws NoSuchAlgorithmException {
+        key = generateKey(128);
+        ivParameterSpec = generateIv();
+        algorithm = "AES/CBC/PKCS5Padding";
     }
-
 
     public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {        //Randomly generates a key
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
@@ -72,33 +73,31 @@ public class AES {
 
     //USE THIS ONE - Mark 
     public String getEncryptedInput(String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        key = generateKey(128);
-        ivParameterSpec = generateIv();
-        //System.out.println(ivParameterSpec+" THIS IS IT!!!!!");
-        algorithm = "AES/CBC/PKCS5Padding";
+
         return encrypt(algorithm, input, key, ivParameterSpec);
     }
 
     public String getKey() {
         byte encoded[] = key.getEncoded();
         String encodedKey = Base64.getEncoder().encodeToString(encoded);
-        
+
 //        byte encodedIV[] = ivParameterSpec.getEncoded();
 //        String encodedIVID = Base64.getEncoder().encodeToString(encodedIV);
         return encodedKey;
     }
 
-    public String getDecryptedInput(String key, String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        byte[] decoded = key.getBytes();
-        SecretKey Okey = new SecretKeySpec(decoded, 0, decoded.length, "AES");
+    public String getDecryptedInput(String ukey, String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         
         
-        System.out.println(Okey);       //TEST PRINT, DELETE LATER
+//        byte[] decoded = ukey.getBytes();
+//        SecretKey Okey = new SecretKeySpec(decoded, 0, decoded.length, "AES");
+//        System.out.println(Okey);       //TEST PRINT, DELETE LATER
+        //algorithm = "AES/CBC/PKCS5Padding";
         
-
-        ivParameterSpec = generateIv();
-        algorithm = "AES/CBC/PKCS5Padding";
-        return decrypt(algorithm, input, Okey, ivParameterSpec);
+        byte[] decodedKey = Base64.getDecoder().decode(ukey);
+        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+        
+        return decrypt(algorithm, input, originalKey, ivParameterSpec);
     }
 }
 

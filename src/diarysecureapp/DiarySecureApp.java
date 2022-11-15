@@ -19,7 +19,7 @@ public class DiarySecureApp {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchAlgorithmException {
         try {
             //Creating SHA method that will encrypt the initial diary entry
             SHA sha = new SHA();
