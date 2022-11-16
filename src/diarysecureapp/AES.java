@@ -55,7 +55,7 @@ public class AES {                                      //create class
         new SecureRandom().nextBytes(iv);                                          //adds random integers
 
         ivByte = Base64.getEncoder().encodeToString(iv);    //encode new string from the byte array
-        System.out.println("BYTE ARRAY IS: " + ivByte);
+        //System.out.println("BYTE ARRAY IS: " + ivByte);
 
         return new IvParameterSpec(iv);                                            //return it as the IV
     }
@@ -206,7 +206,6 @@ public class AES {                                      //create class
 //            toStream.close();
 //            
 //
-//            System.out.println("IV LOADED FROM FILE " + ivByte);
 //            
 //            iv = ivByte.getBytes();
 //            
