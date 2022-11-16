@@ -1,5 +1,7 @@
 package diarysecureapp;
 
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,13 +34,12 @@ public class AES {                                      //create class
     private final String algorithm;                     //Type of algorithm used, CBC
     private String ivByte;
     byte[] iv;
-    
 
     public AES() throws NoSuchAlgorithmException {
         SecretKey = generateKey(128);
         IV = generateIv();
         algorithm = "AES/CBC/PKCS5Padding";
-        
+
     }
 
     public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {        //Randomly generates a key
@@ -52,11 +53,10 @@ public class AES {                                      //create class
 
         iv = new byte[16];                                                       //creates a byte array
         new SecureRandom().nextBytes(iv);                                          //adds random integers
-        
 
         ivByte = Base64.getEncoder().encodeToString(iv);    //encode new string from the byte array
-        System.out.println("BYTE ARRAY IS: "+ivByte);
-        
+        System.out.println("BYTE ARRAY IS: " + ivByte);
+
         return new IvParameterSpec(iv);                                            //return it as the IV
     }
 
@@ -112,8 +112,11 @@ public class AES {                                      //create class
 
     public void saveFile(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, FileNotFoundException {
         File f;
+//        File t;
         FileOutputStream fStream;
         ObjectOutputStream oStream;
+//        FileOutputStream tStream;
+//        ObjectOutputStream toStream;
 
         try {
             f = new File("output.dat");                             //create output.dat file for storing message
@@ -125,6 +128,22 @@ public class AES {                                      //create class
             oStream.close();                                            //close
 
             System.out.println("Its saved! Message is - " + message);           //REMOVE when final
+
+//            t = new File("iv.dat");                             //create output.dat file for storing message
+//            tStream = new FileOutputStream(t);
+//            toStream = new ObjectOutputStream(tStream);
+//
+//            toStream.writeObject(ivByte);                           //write message as object into file
+//
+//            toStream.close();                                            //close
+
+            FileOutputStream fs = new FileOutputStream(new File("iv.dat"));
+            BufferedOutputStream bos = new BufferedOutputStream(fs);
+            bos.write(iv);
+            bos.close();
+
+            System.out.println("IV SAVED! Message is - " + ivByte);
+
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException e) {
             System.out.println(e);
@@ -133,8 +152,11 @@ public class AES {                                      //create class
 
     public String loadFile(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, FileNotFoundException {
         File f;
+//        File t;
         FileInputStream fStream;
         ObjectInputStream oStream;
+//        FileInputStream tStream;
+//        ObjectInputStream toStream;
 
         //program will try to load a file called 'output.dat' when information is saved in the commonField ArrayList.
         try {
@@ -145,21 +167,57 @@ public class AES {                                      //create class
             message = (String) oStream.readObject();
             oStream.close();
 
-            String[] messageArray = message.split(" ", 2);
-            message = messageArray[0];
-            ivByte = messageArray[1];
-
-            System.out.println(ivByte);
-            byte[] newIV  = {82,76,88,116,97,68,69,102,79,116,43,102,99,52,101,112};
-            //newIV = ivByte.getBytes();
-            
-            
-            for(int i = 0; i < newIV.length;i++){
-                System.out.println(newIV[i]);
-            }
-            IV = new IvParameterSpec(newIV);
-
+//            String[] messageArray = message.split(" ", 2);
+//            message = messageArray[0];
+//            ivByte = messageArray[1];
+//
+//            System.out.println(ivByte);
+//            byte[] newIV  = {82,76,88,116,97,68,69,102,79,116,43,102,99,52,101,112};
+//            //newIV = ivByte.getBytes();
+//            
+//            
+//            for(int i = 0; i < newIV.length;i++){
+//                System.out.println(newIV[i]);
+//            }
+//            IV = new IvParameterSpec(newIV);
             System.out.println("Its loaded! Message is - " + message);          //REMOVE when final
+
+            
+            
+            byte[] fileInfo = new byte[16];
+            DataInputStream input = null;
+            
+            input = new DataInputStream(new FileInputStream(new File("iv.dat")));
+            input.readFully(fileInfo);
+            if(input != null) {
+                input.close();
+            }
+            
+            IV = new IvParameterSpec(fileInfo);
+            
+            
+            
+            
+//            t = new File("iv.dat");
+//            tStream = new FileInputStream(t);
+//            toStream = new ObjectInputStream(tStream);
+//            
+//            ivByte = (String) toStream.readObject();
+//            toStream.close();
+//            
+//
+//            System.out.println("IV LOADED FROM FILE " + ivByte);
+//            
+//            iv = ivByte.getBytes();
+//            
+//            for(int i = 0; i < iv.length;i++){
+//                System.out.println(iv[i]);
+//            }
+//            
+//            IV = new IvParameterSpec(iv);
+//            
+            
+            
 
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException | ClassNotFoundException e) {
