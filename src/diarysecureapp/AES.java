@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -48,7 +47,6 @@ public class AES {                                      //create class
     public static IvParameterSpec generateIv() {                                        //Generates initialisation vector
         byte[] iv = new byte[16];                                                       //creates a byte array
         new SecureRandom().nextBytes(iv);                                          //adds random integers
-        System.out.println(iv);                                                       //prints out the random ints DELETE WHEN FINISHED
         return new IvParameterSpec(iv);                                            //return it as the IV
     }
 
@@ -106,14 +104,14 @@ public class AES {                                      //create class
         ObjectOutputStream oStream;
 
         try {
-            f = new File("output.dat");
+            f = new File("output.dat");                             //create output.dat file for storing message
             fStream = new FileOutputStream(f);
             oStream = new ObjectOutputStream(fStream);
 
-            oStream.writeObject(message);
-            oStream.close();
+            oStream.writeObject(message);                           //write message as object into file
+            oStream.close();                                            //close
 
-            System.out.println("Its saved" + message);
+            System.out.println("Its saved! Message is - " + message);           //REMOVE when final
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException e) {
             System.out.println(e);
@@ -134,7 +132,7 @@ public class AES {                                      //create class
             message = (String) oStream.readObject();
             oStream.close();
 
-            System.out.println("Its loaded" + message);
+            System.out.println("Its loaded! Message is - " + message);          //REMOVE when final
 
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException | ClassNotFoundException e) {
@@ -144,8 +142,3 @@ public class AES {                                      //create class
         return message;
     }
 }
-
-//ivParameterSpec = generateIv();
-//        algorithm = "AES/CBC/PKCS5Padding";
-//        return decrypt(algorithm, input, Okey, ivParameterSpec);
-//test poopy head
