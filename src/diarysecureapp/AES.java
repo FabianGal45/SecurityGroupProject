@@ -112,11 +112,8 @@ public class AES {                                      //create class
 
     public void saveFile(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, FileNotFoundException {
         File f;
-//        File t;
         FileOutputStream fStream;
         ObjectOutputStream oStream;
-//        FileOutputStream tStream;
-//        ObjectOutputStream toStream;
 
         try {
             f = new File("output.dat");                             //create output.dat file for storing message
@@ -127,22 +124,15 @@ public class AES {                                      //create class
 
             oStream.close();                                            //close
 
-            System.out.println("Its saved! Message is - " + message);           //REMOVE when final
+            System.out.println("Its saved! Message is - " + message);           //Proof message is saved
 
-//            t = new File("iv.dat");                             //create output.dat file for storing message
-//            tStream = new FileOutputStream(t);
-//            toStream = new ObjectOutputStream(tStream);
-//
-//            toStream.writeObject(ivByte);                           //write message as object into file
-//
-//            toStream.close();                                            //close
-
+            //Creates a new file to store the IV in
             FileOutputStream fs = new FileOutputStream(new File("iv.dat"));
             BufferedOutputStream bos = new BufferedOutputStream(fs);
             bos.write(iv);
             bos.close();
 
-            System.out.println("IV SAVED! Message is - " + ivByte);
+            System.out.println("IV SAVED! Message is - " + ivByte); //Proof that the iv has been saved
 
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException e) {
@@ -152,38 +142,23 @@ public class AES {                                      //create class
 
     public String loadFile(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, FileNotFoundException {
         File f;
-//        File t;
         FileInputStream fStream;
         ObjectInputStream oStream;
-//        FileInputStream tStream;
-//        ObjectInputStream toStream;
-
-        //program will try to load a file called 'output.dat' when information is saved in the commonField ArrayList.
+        
+        //program will load the output.dat file that stores the message
         try {
             f = new File("output.dat");
             fStream = new FileInputStream(f);
             oStream = new ObjectInputStream(fStream);
-
+            
+            //message will equal the info inside the file, converted to a String
             message = (String) oStream.readObject();
             oStream.close();
 
-//            String[] messageArray = message.split(" ", 2);
-//            message = messageArray[0];
-//            ivByte = messageArray[1];
-//
-//            System.out.println(ivByte);
-//            byte[] newIV  = {82,76,88,116,97,68,69,102,79,116,43,102,99,52,101,112};
-//            //newIV = ivByte.getBytes();
-//            
-//            
-//            for(int i = 0; i < newIV.length;i++){
-//                System.out.println(newIV[i]);
-//            }
-//            IV = new IvParameterSpec(newIV);
-            System.out.println("Its loaded! Message is - " + message);          //REMOVE when final
+            System.out.println("Its loaded! Message is - " + message);          //Proof program is loading message
 
             
-            
+            //Reads in the byte info of the IV from the iv.dat file
             byte[] fileInfo = new byte[16];
             DataInputStream input = null;
             
@@ -193,31 +168,11 @@ public class AES {                                      //create class
                 input.close();
             }
             
+            //Sets the IV to equal a new IVParameterSpec that is the IV read from the file
             IV = new IvParameterSpec(fileInfo);
             
+            System.out.println("IV LOADED IS: " +Base64.getEncoder().encodeToString(fileInfo)); //Proof program is loading IV
             
-            
-            
-//            t = new File("iv.dat");
-//            tStream = new FileInputStream(t);
-//            toStream = new ObjectInputStream(tStream);
-//            
-//            ivByte = (String) toStream.readObject();
-//            toStream.close();
-//            
-//
-//            
-//            iv = ivByte.getBytes();
-//            
-//            for(int i = 0; i < iv.length;i++){
-//                System.out.println(iv[i]);
-//            }
-//            
-//            IV = new IvParameterSpec(iv);
-//            
-            
-            
-
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e);
