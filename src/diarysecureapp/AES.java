@@ -26,14 +26,14 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * @author Christopher
  */
-public class AES {
+public class AES {                                      //create class
 
-    private SecretKey key;
-    private IvParameterSpec ivParameterSpec;
-    private String algorithm;
+    private final SecretKey key;                        //key, always unique with session
+    private final IvParameterSpec ivParameterSpec;      //IV, same as key but can be overread from loading file
+    private final String algorithm;                     //Type of algorithm used, CBC
 
     public AES() throws NoSuchAlgorithmException {
-        key = generateKey(128);
+        key = generateKey(128);                       
         ivParameterSpec = generateIv();
         algorithm = "AES/CBC/PKCS5Padding";
     }
@@ -52,58 +52,56 @@ public class AES {
         return new IvParameterSpec(iv);                                            //return it as the IV
     }
 
-    public String encrypt(String algorithm, String input, SecretKey key, //needs algorithm, input and key
+    public String encrypt(String algorithm, String input, SecretKey key,                            //needs algorithm, input, key and IV
             IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException, //idk why but it likes to throw alot of exceptions
+            InvalidAlgorithmParameterException, InvalidKeyException,                                //idk why but it likes to throw alot of exceptions
             BadPaddingException, IllegalBlockSizeException {                                        //ignore this
 
-        Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-        byte[] cipherText = cipher.doFinal(input.getBytes());
-        return Base64.getEncoder()
+        Cipher cipher = Cipher.getInstance(algorithm);                                        //Create cipher with the CBC algorithm
+        cipher.init(Cipher.ENCRYPT_MODE, key, iv);                                            //set cipher to encrypt mode, using the key and the IV
+        byte[] cipherText = cipher.doFinal(input.getBytes());                                 //put the input into a byte array called cipherText
+        return Base64.getEncoder()                                                                  //Return the Base64 string that was converted from the byte array
                 .encodeToString(cipherText);
     }
 
-    public static String decrypt(String algorithm, String cipherText, SecretKey key,
+    public static String decrypt(String algorithm, String cipherText, SecretKey key,                //needs algorithm, encrypted message, key and IV
             IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
             InvalidAlgorithmParameterException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
 
-        Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, key, iv);
-        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
-        return new String(plainText);
+        Cipher cipher = Cipher.getInstance(algorithm);                                      //Create cipher, set CBC
+        cipher.init(Cipher.DECRYPT_MODE, key, iv);                                          //Set cipher to decrypt mode, use key and IV
+        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));       //create a byte array, and decode the ciphertext onto it
+        return new String(plainText);                                                       //return a string, of the byte array
     }
 
-    //USE THIS ONE - Mark 
+    //This method is used by DiaryGUI, to envoke encrypt using user input string
     public String getEncryptedInput(String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-
-        return encrypt(algorithm, input, key, ivParameterSpec);
+        
+        return encrypt(algorithm, input, key, ivParameterSpec);         
     }
-
+    //This method is used to encode the key into a string and return it to the user
     public String getKey() {
-        byte encoded[] = key.getEncoded();
-        String encodedKey = Base64.getEncoder().encodeToString(encoded);
+        byte encoded[] = key.getEncoded();                                      //create byte array
+        String encodedKey = Base64.getEncoder().encodeToString(encoded);    //encode new string from the byte array
 
 //        byte encodedIV[] = ivParameterSpec.getEncoded();
 //        String encodedIVID = Base64.getEncoder().encodeToString(encodedIV);
-        return encodedKey;
+        return encodedKey;                                                      //return string to user
     }
-
+    //This method is used to encode the key back into secretKey, while also envoking decrypt, with the user key and encrypted input
     public String getDecryptedInput(String ukey, String input) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
 //        byte[] decoded = ukey.getBytes();
 //        SecretKey Okey = new SecretKeySpec(decoded, 0, decoded.length, "AES");
-//        System.out.println(Okey);       //TEST PRINT, DELETE LATER
-        //algorithm = "AES/CBC/PKCS5Padding";
-        byte[] decodedKey = Base64.getDecoder().decode(ukey);
-        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+        byte[] decodedKey = Base64.getDecoder().decode(ukey);                                                   //encode string back into key
+        SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");        
 
-        return decrypt(algorithm, input, originalKey, ivParameterSpec);
+        return decrypt(algorithm, input, originalKey, ivParameterSpec);                             
     }
 
     public void saveFile(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, FileNotFoundException {
-        File f;
+        File f;                     
         FileOutputStream fStream;
         ObjectOutputStream oStream;
 

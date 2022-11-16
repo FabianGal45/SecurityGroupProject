@@ -29,13 +29,13 @@ public class DiaryGUI extends javax.swing.JFrame {
      */
     public DiaryGUI() throws NoSuchAlgorithmException {
         initComponents();
-        
+
     }
-    String message = "";
-    String aesMessage = "";
-    String Okey = "";
-    String uKey = "";
-    AES a = new AES();
+    String message = "";        //Input Message
+    String aesMessage = "";     //Encrypted Message
+    String Okey = "";           //Output Key
+    String uKey = "";           //Input Key
+    AES a = new AES();          //AES object
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -168,74 +168,60 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     private void loadBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBTNActionPerformed
         // TODO add your handling code here:
-        
+
         try {
             // TODO add your handling code here:
 
-            aesMessage = a.loadFile(message);
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+            aesMessage = a.loadFile(message);                                                               //Load encrypted message from file
+            outputTF.setText(outputTF.getText() + "Message extracted from file - " + aesMessage + "\n");    //Print encrypted message in output box
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | FileNotFoundException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);     //Error Handling
         }
     }//GEN-LAST:event_loadBTNActionPerformed
 
     private void encryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptBTNActionPerformed
-        message = inputTF.getText();
+        message = inputTF.getText();                                                                        //Grab text from text field
 
-        try {
-            aesMessage = a.getEncryptedInput(message);
-            Okey = a.getKey();  //
-            outputTF.setText("Message - " + aesMessage + "\n");
-            JOptionPane.showMessageDialog(null, "The key is: " + Okey+"\nThe key was saved to your clipboard");
-            StringSelection stringSelection = new StringSelection(Okey);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-            
+        if (message == "") {                                                                                //Check if message exists
+            outputTF.setText(outputTF.getText() + "There is nothing to encrypt!\n");                        //If not, print error
+        } else {
+            try {
+                aesMessage = a.getEncryptedInput(message);                                             //use method to return encrypted input
+                Okey = a.getKey();  //                                                                      //use method to grab key
+                outputTF.setText(outputTF.getText() + "Message - " + aesMessage + "\n");                    //print encrypted message to output
+                JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
+                StringSelection stringSelection = new StringSelection(Okey);                          //String select Okey
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();                     //
+                clipboard.setContents(stringSelection, null);                                  //Clipboard handling
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+                Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex); //Error handling
+
+            }
         }
 
     }//GEN-LAST:event_encryptBTNActionPerformed
 
     private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
         // TODO add your handling code here:
-        
+
         try {
             // TODO add your handling code here:
+            if (aesMessage == "") {                                                                 //Check if message exists
+                outputTF.setText(outputTF.getText() + "There is nothing encrypted!\n");             //Print error
+            } else {
+                a.saveFile(aesMessage);                                                      //use save method
+                outputTF.setText(outputTF.getText() + "Saved!\n");                                  //print confirmation
+            }
 
-            a.saveFile(aesMessage);
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | FileNotFoundException ex) {
+            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex); //Error handling
         }
     }//GEN-LAST:event_saveBTNActionPerformed
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
-        uKey = JOptionPane.showInputDialog(null,"Please enter your key:\n");
+        uKey = JOptionPane.showInputDialog(null, "Please enter your key:\n"); //Ask key from user
         try {
-            JOptionPane.showMessageDialog(null, a.getDecryptedInput(uKey, aesMessage));
+            JOptionPane.showMessageDialog(null, "Your decrypted message is: " + a.getDecryptedInput(uKey, aesMessage)); //Print out decrypted message, by calling the method along with the encrypted message(aesMessage) and the key(Ukey)
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
