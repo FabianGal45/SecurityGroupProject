@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.FileNotFoundException;
+import java.io.StreamCorruptedException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -37,8 +38,7 @@ public class DiaryGUI extends javax.swing.JFrame {
     String uKey = "";           //Input Key
     AES a = new AES();          //AES object
     SHA s = new SHA();          //SHA object
-    
-  
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -224,7 +224,11 @@ public class DiaryGUI extends javax.swing.JFrame {
 
         aesMessage = a.loadFile();                                                            //Load encrypted message from file
         outputTF.setText(outputTF.getText() + "Message extracted from file - " + aesMessage + "\n");    //Print encrypted message in output box
-        
+        if(aesMessage==null){
+            outputTF.append("The AES check has failed! The message has been tampered with.\n");   
+        }
+
+
     }//GEN-LAST:event_loadBTNActionPerformed
 
     private void encryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptBTNActionPerformed
@@ -233,7 +237,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         if (message == "") {                                                                                //Check if message exists
             outputTF.setText(outputTF.getText() + "There is nothing to encrypt!\n");                        //If not, print error
         } else {
-            
+
             aesMessage = a.encrypt(message);                                             //use method to return encrypted input
             s.saveToFile(s.encrypt(message));                                                       //encrypts and saves to file
             Okey = a.getKey();                                                                        //use method to grab key
@@ -261,23 +265,23 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
         uKey = JOptionPane.showInputDialog(null, "Please enter your key:\n"); //Ask key from user
-        
-        try{
-           String decryptedMessage = a.decrypt(uKey);//Decrypt the original message. 
-        }catch(IllegalArgumentException e){
+        String decryptedMessage = null;
+        try {
+            decryptedMessage = a.decrypt(uKey);//Decrypt the original message. 
+        } catch (IllegalArgumentException | NullPointerException e) {
             outputTF.append("The key does not match!\n");
-        }
-        String decryptedMessage = a.decrypt(uKey);//Decrypt the original message.
+        } 
+        
         String h1 = s.encrypt(decryptedMessage);//Generate a new hash that will be compared with the original hash saved in the file 
         String h2 = s.readFromFile(); //Original hash from the saved file.
-        
-        if(s.compare(h1, h2)){ //if the hashes match then display the message back where it can be edited again.
+
+        if (s.compare(h1, h2)) { //if the hashes match then display the message back where it can be edited again.
             inputTF.setText(decryptedMessage);
             outputTF.append("Message decrypted\n");
-        }else{
-            outputTF.append("The message has been tampered with!\n");
+        } else {
+            outputTF.append("The SHA check has Failed! The message has been tampered with.\n");
         }
-        
+
     }//GEN-LAST:event_decryptBTNActionPerformed
 
     /**

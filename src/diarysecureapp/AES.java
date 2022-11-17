@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -76,7 +77,7 @@ public class AES {                                      //create class
     }
     
 //needs algorithm, encrypted message, key and IV
-    public String decrypt(String ukey) throws IllegalArgumentException {
+    public String decrypt(String ukey) throws IllegalArgumentException, NullPointerException {
         
         String cipherText = loadFile();
         byte[] decodedKey = Base64.getDecoder().decode(ukey);  //get this from method                                                 //encode string back into key
