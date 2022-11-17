@@ -36,7 +36,9 @@ public class DiaryGUI extends javax.swing.JFrame {
     String Okey = "";           //Output Key
     String uKey = "";           //Input Key
     AES a = new AES();          //AES object
-
+    SHA s = new SHA();          //SHA object
+    
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -187,7 +189,8 @@ public class DiaryGUI extends javax.swing.JFrame {
         } else {
             try {
                 aesMessage = a.getEncryptedInput(message);                                             //use method to return encrypted input
-                Okey = a.getKey();  //                                                                      //use method to grab key
+                s.saveToFile(s.encrypt(message));
+                Okey = a.getKey();                                                                        //use method to grab key
                 outputTF.setText(outputTF.getText() + "Message - " + aesMessage + "\n");                    //print encrypted message to output
                 JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
                 StringSelection stringSelection = new StringSelection(Okey);                          //String select Okey

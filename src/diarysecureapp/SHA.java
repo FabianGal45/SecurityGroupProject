@@ -4,9 +4,21 @@
  */
 package diarysecureapp;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,7 +29,7 @@ public class SHA {
     MessageDigest md;
 
     public SHA() throws NoSuchAlgorithmException {
-        this.md = MessageDigest.getInstance("SHA3-256");
+        this.md = MessageDigest.getInstance("SHA-256");
     }
 
     public String encrypt(String input) {
@@ -37,10 +49,43 @@ public class SHA {
         }
         return hexString.toString();
     }
+
+    public void saveToFile(String sha) {
+                               //create output.dat file for storing message
+        try {
+            FileWriter fs = new FileWriter(new File("shaFile.dat")); //Creates new file for string
+            BufferedWriter bw = new BufferedWriter(fs);
+         
+            
+            bw.write(sha); // writes to file 
+            bw.close(); //closes writer
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
     
-    public boolean compare(String h1, String h2){
+    public String readFromFile () {
+        String sha = null;
+       
+        try {
+            BufferedReader br = new BufferedReader (new FileReader("shaFile.dat"));
+            
+            sha = br.readLine();
+            br.close();
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SHA.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SHA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sha;
+    }
+        
+    
+
+    public boolean compare(String h1, String h2) {
         boolean similar = false;
-        if(h1.equals(h2)){
+        if (h1.equals(h2)) {
             similar = true;
         }
         return similar;
