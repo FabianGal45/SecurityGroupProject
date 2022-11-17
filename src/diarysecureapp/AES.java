@@ -60,12 +60,19 @@ public class AES {                                      //create class
         return new IvParameterSpec(iv);                                            //return it as the IV
     }
 //needs algorithm, input, key and IV
-    public String encrypt(String input) throws NoSuchPaddingException, NoSuchAlgorithmException,InvalidAlgorithmParameterException, InvalidKeyException,BadPaddingException, IllegalBlockSizeException {                                        //ignore this
-        Cipher encryptCipher = Cipher.getInstance(algorithm);                                        //Create cipher with the CBC algorithm
-        encryptCipher.init(Cipher.ENCRYPT_MODE, SecretKey, IV);                                      //set cipher to encrypt mode, using the key and the IV
-        byte[] cipherText = encryptCipher.doFinal(input.getBytes());                                 //put the input into a byte array called cipherText
-        return Base64.getEncoder() //Return the Base64 string that was converted from the byte array
-                .encodeToString(cipherText);
+    public String encrypt(String input){                                        //ignore this
+        Cipher encryptCipher;
+        byte[] cipherText = null;
+        try {
+            encryptCipher = Cipher.getInstance(algorithm); //Create cipher with the CBC algorithm
+            encryptCipher.init(Cipher.ENCRYPT_MODE, SecretKey, IV);                                      //set cipher to encrypt mode, using the key and the IV
+            cipherText = encryptCipher.doFinal(input.getBytes());                                 //put the input into a byte array called cipherText
+            
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
+            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        return Base64.getEncoder().encodeToString(cipherText);//Return the Base64 string that was converted from the byte array
     }
     
 //needs algorithm, encrypted message, key and IV
@@ -83,19 +90,10 @@ public class AES {                                      //create class
             byte[] plainText = decryptCipher.doFinal(Base64.getDecoder().decode(cipherText));       //create a byte array, and decode the ciphertext onto it
             decryptResult = new String(plainText);
             
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchPaddingException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BadPaddingException ex) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
         }
+   
         
         return decryptResult;                                                       //return a string, of the byte array
     }
@@ -111,7 +109,7 @@ public class AES {                                      //create class
     }
 
 
-    public void saveFile(String message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, FileNotFoundException {
+    public void saveFile(String message){
         File f;
         FileOutputStream fStream;
         ObjectOutputStream oStream;
@@ -177,11 +175,9 @@ public class AES {                                      //create class
 
             System.out.println("IV LOADED IS: " +Base64.getEncoder().encodeToString(fileInfo)); //Proof program is loading IV
 
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException  ex) {
             Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
         }
           

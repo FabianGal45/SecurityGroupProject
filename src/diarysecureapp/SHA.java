@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class SHA {
 
-    MessageDigest md;
+    private MessageDigest md;
 
     public SHA() throws NoSuchAlgorithmException {
         this.md = MessageDigest.getInstance("SHA-256");

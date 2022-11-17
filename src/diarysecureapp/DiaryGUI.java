@@ -181,50 +181,43 @@ public class DiaryGUI extends javax.swing.JFrame {
         if (message == "") {                                                                                //Check if message exists
             outputTF.setText(outputTF.getText() + "There is nothing to encrypt!\n");                        //If not, print error
         } else {
-            try {
-                aesMessage = a.encrypt(message);                                             //use method to return encrypted input
-                s.saveToFile(s.encrypt(message));                                                       //encrypts and saves to file
-                Okey = a.getKey();                                                                        //use method to grab key
-                outputTF.setText(outputTF.getText() + "Message - " + aesMessage + "\n");                    //print encrypted message to output
-                JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
-                StringSelection stringSelection = new StringSelection(Okey);                          //String select Okey
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();                     //
-                clipboard.setContents(stringSelection, null);                                  //Clipboard handling
-            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex); //Error handling
+            
+            aesMessage = a.encrypt(message);                                             //use method to return encrypted input
+            s.saveToFile(s.encrypt(message));                                                       //encrypts and saves to file
+            Okey = a.getKey();                                                                        //use method to grab key
+            outputTF.setText(outputTF.getText() + "Message - " + aesMessage + "\n");                    //print encrypted message to output
+            JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
+            StringSelection stringSelection = new StringSelection(Okey);                          //String select Okey
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();                     //
+            clipboard.setContents(stringSelection, null);                                  //Clipboard handling
 
-            }
         }
 
     }//GEN-LAST:event_encryptBTNActionPerformed
 
     private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
-        // TODO add your handling code here:
 
-        try {
-            // TODO add your handling code here:
-            if (aesMessage == "") {                                                                 //Check if message exists
-                outputTF.setText(outputTF.getText() + "There is nothing encrypted!\n");             //Print error
-            } else {
-                a.saveFile(aesMessage);                                                      //use save method
-                outputTF.setText(outputTF.getText() + "Saved!\n");                                  //print confirmation
-            }
-
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | FileNotFoundException ex) {
-            Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex); //Error handling
+        if (aesMessage == "") {                                                                 //Check if message exists
+            outputTF.setText(outputTF.getText() + "There is nothing encrypted!\n");             //Print error
+        } else {
+            a.saveFile(aesMessage);                                                      //use save method
+            outputTF.setText(outputTF.getText() + "Saved!\n");                                  //print confirmation
         }
+
     }//GEN-LAST:event_saveBTNActionPerformed
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
         uKey = JOptionPane.showInputDialog(null, "Please enter your key:\n"); //Ask key from user
-        String h1 = null; //first hash
-        String h2 = null; //second hash
         
-        String decryptedMessage = a.decrypt(uKey);//Message should come straight from the file
-        h1 = s.encrypt(decryptedMessage);//generate a new hash that will be compared with the original hash saved in the file 
-        h2 = s.readFromFile();
-        if(s.compare(h1, h2)){
+        String decryptedMessage = a.decrypt(uKey);//Decrypt the original message.
+        String h1 = s.encrypt(decryptedMessage);//Generate a new hash that will be compared with the original hash saved in the file 
+        String h2 = s.readFromFile(); //Original hash from the saved file.
+        
+        if(s.compare(h1, h2)){ //if the hashes match then display the message back where it can be edited again.
             inputTF.setText(decryptedMessage);
+            outputTF.append("Message decripted");
+        }else{
+            outputTF.append("The message has been tampered with!");
         }
         
     }//GEN-LAST:event_decryptBTNActionPerformed
