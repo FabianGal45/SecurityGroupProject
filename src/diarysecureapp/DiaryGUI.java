@@ -223,7 +223,7 @@ public class DiaryGUI extends javax.swing.JFrame {
     private void loadBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBTNActionPerformed
 
         aesMessage = a.loadFile();                                                            //Load encrypted message from file
-        outputTF.setText(outputTF.getText() + "Message extracted from file - " + aesMessage + "\n");    //Print encrypted message in output box
+        outputTF.setText(outputTF.getText() + "Diary Entry extracted from file: " + aesMessage + "\n");    //Print encrypted message in output box
         
     }//GEN-LAST:event_loadBTNActionPerformed
 
@@ -237,7 +237,7 @@ public class DiaryGUI extends javax.swing.JFrame {
             aesMessage = a.encrypt(message);                                             //use method to return encrypted input
             s.saveToFile(s.encrypt(message));                                                       //encrypts and saves to file
             Okey = a.getKey();                                                                        //use method to grab key
-            outputTF.setText(outputTF.getText() + "Message - " + aesMessage + "\n");                    //print encrypted message to output
+            outputTF.setText(outputTF.getText() + "Encrypted Diary Entry: " + aesMessage + "\n");                    //print encrypted message to output
             JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
             StringSelection stringSelection = new StringSelection(Okey);                          //String select Okey
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();                     //
@@ -273,7 +273,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         
         if(s.compare(h1, h2)){ //if the hashes match then display the message back where it can be edited again.
             inputTF.setText(decryptedMessage);
-            outputTF.append("Message decrypted\n");
+            outputTF.append("Diary Entry decrypted\n");
         }else{
             outputTF.append("The message has been tampered with!\n");
         }
