@@ -189,7 +189,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         } else {
             try {
                 aesMessage = a.getEncryptedInput(message);                                             //use method to return encrypted input
-                s.saveToFile(s.encrypt(message));
+                s.saveToFile(s.encrypt(message));                                                       //encrypts and saves to file
                 Okey = a.getKey();                                                                        //use method to grab key
                 outputTF.setText(outputTF.getText() + "Message - " + aesMessage + "\n");                    //print encrypted message to output
                 JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
@@ -223,10 +223,20 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
         uKey = JOptionPane.showInputDialog(null, "Please enter your key:\n"); //Ask key from user
-        try {
-            JOptionPane.showMessageDialog(null, "Your decrypted message is: " + a.getDecryptedInput(uKey, aesMessage)); //Print out decrypted message, by calling the method along with the encrypted message(aesMessage) and the key(Ukey)
+        String h1 = null; //first hash
+        String h2 = null; //second hash
+        
+        try{ 
+            String decryptedMessage = a.getDecryptedInput(uKey, aesMessage);
+            h1 = s.encrypt(decryptedMessage);//generate a new hash that will be compared with the original hash saved in the file 
+            h2 = s.readFromFile();
+            if(s.compare(h1, h2)){
+                inputTF.setText(decryptedMessage);
+            }
+            
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(DiaryGUI.class.getName()).log(Level.SEVERE, null, ex);
+            outputTF.append("Oops :panic: !\n");
         }
     }//GEN-LAST:event_decryptBTNActionPerformed
 
