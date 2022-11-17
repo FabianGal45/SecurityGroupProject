@@ -133,6 +133,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         outputLBL.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         outputLBL.setText("Encrypted Output");
 
+        outputTF.setEditable(false);
         outputTF.setColumns(20);
         outputTF.setRows(5);
         jScrollPane2.setViewportView(outputTF);
