@@ -271,10 +271,10 @@ public class DiaryGUI extends javax.swing.JFrame {
             outputTF.append("The key does not match!\n");
         } 
         
-        String h1 = s.encrypt(decryptedMessage);//Generate a new hash that will be compared with the original hash saved in the file 
-        String h2 = s.readFromFile(); //Original hash from the saved file.
+        String hashOne = s.encrypt(decryptedMessage);//Generate a new hash that will be compared with the original hash saved in the file 
+        String hashTwo = s.readFromFile(); //Original hash from the saved file.
 
-        if (s.compare(h1, h2)) { //if the hashes match then display the message back where it can be edited again.
+        if (s.compare(hashOne, hashTwo)) { //if the hashes match then display the message back where it can be edited again.
             inputTF.setText(decryptedMessage);
 
             outputTF.append("Message decrypted\n");

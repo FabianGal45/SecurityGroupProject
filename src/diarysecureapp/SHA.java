@@ -26,15 +26,15 @@ import java.util.logging.Logger;
  */
 public class SHA {
 
-    private MessageDigest md;
+    private MessageDigest messDigest;
 
     public SHA() throws NoSuchAlgorithmException {
-        this.md = MessageDigest.getInstance("SHA-256");
+        this.messDigest = MessageDigest.getInstance("SHA-256");
     }
 
     public String encrypt(String input) {
-        byte[] hashbytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
-        return bytesToHex(hashbytes);
+        byte[] hBytes = messDigest.digest(input.getBytes(StandardCharsets.UTF_8));
+        return bytesToHex(hBytes);
     }
 
     //Method From: https://www.baeldung.com/sha-256-hashing-java
@@ -83,9 +83,9 @@ public class SHA {
         
     
 
-    public boolean compare(String h1, String h2) {
+    public boolean compare(String hashOne, String hashTwo) {
         boolean similar = false;
-        if (h1.equals(h2)) {
+        if (hashOne.equals(hashTwo)) {
             similar = true;
         }
         return similar;
