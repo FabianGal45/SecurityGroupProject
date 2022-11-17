@@ -265,7 +265,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         try{
            String decryptedMessage = a.decrypt(uKey);//Decrypt the original message. 
         }catch(IllegalArgumentException e){
-            outputTF.append("The key does not match!");
+            outputTF.append("The key does not match!\n");
         }
         String decryptedMessage = a.decrypt(uKey);//Decrypt the original message.
         String h1 = s.encrypt(decryptedMessage);//Generate a new hash that will be compared with the original hash saved in the file 
@@ -273,9 +273,9 @@ public class DiaryGUI extends javax.swing.JFrame {
         
         if(s.compare(h1, h2)){ //if the hashes match then display the message back where it can be edited again.
             inputTF.setText(decryptedMessage);
-            outputTF.append("Message decrypted");
+            outputTF.append("Message decrypted\n");
         }else{
-            outputTF.append("The message has been tampered with!");
+            outputTF.append("The message has been tampered with!\n");
         }
         
     }//GEN-LAST:event_decryptBTNActionPerformed
