@@ -76,7 +76,7 @@ public class AES {                                      //create class
     }
     
 //needs algorithm, encrypted message, key and IV
-    public String decrypt(String ukey){
+    public String decrypt(String ukey) throws IllegalArgumentException {
         
         String cipherText = loadFile();
         byte[] decodedKey = Base64.getDecoder().decode(ukey);  //get this from method                                                 //encode string back into key

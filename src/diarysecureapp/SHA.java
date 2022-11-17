@@ -37,7 +37,7 @@ public class SHA {
         return bytesToHex(hashbytes);
     }
 
-    //From: https://www.baeldung.com/sha-256-hashing-java
+    //Method From: https://www.baeldung.com/sha-256-hashing-java
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (int i = 0; i < hash.length; i++) {
@@ -51,7 +51,7 @@ public class SHA {
     }
 
     public void saveToFile(String sha) {
-                               //create output.dat file for storing message
+    //create output.dat file for storing message
         try {
             FileWriter fs = new FileWriter(new File("shaFile.dat")); //Creates new file for string
             BufferedWriter bw = new BufferedWriter(fs);

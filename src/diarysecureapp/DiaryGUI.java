@@ -254,12 +254,18 @@ public class DiaryGUI extends javax.swing.JFrame {
             a.saveFile(aesMessage);                                                      //use save method
             outputTF.setText(outputTF.getText() + "Saved!\n");                                  //print confirmation
         }
+        inputTF.setText("");
 
     }//GEN-LAST:event_saveBTNActionPerformed
 
     private void decryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptBTNActionPerformed
         uKey = JOptionPane.showInputDialog(null, "Please enter your key:\n"); //Ask key from user
         
+        try{
+           String decryptedMessage = a.decrypt(uKey);//Decrypt the original message. 
+        }catch(IllegalArgumentException e){
+            outputTF.append("The key does not match!");
+        }
         String decryptedMessage = a.decrypt(uKey);//Decrypt the original message.
         String h1 = s.encrypt(decryptedMessage);//Generate a new hash that will be compared with the original hash saved in the file 
         String h2 = s.readFromFile(); //Original hash from the saved file.
