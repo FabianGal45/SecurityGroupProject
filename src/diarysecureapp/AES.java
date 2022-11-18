@@ -116,23 +116,23 @@ public class AES {                                      //create class
         ObjectOutputStream oStream;
 
         try {
-            f = new File("output.dat");                             //create output.dat file for storing message
+            f = new File("output.dat");                             //create output.dat file for storing diary entry
             fStream = new FileOutputStream(f);
             oStream = new ObjectOutputStream(fStream);
 
-            oStream.writeObject(message);                           //write message as object into file
+            oStream.writeObject(message);                           //write entry as object into file
 
             oStream.close();                                            //close
 
-            System.out.println("Its saved! Message is - " + message);           //Proof message is saved
+            System.out.println("Its saved! Diary Entry is - " + message);           //Proof entry is saved
 
             //Creates a new file to store the IV in
             FileOutputStream fs = new FileOutputStream(new File("iv.dat"));
             BufferedOutputStream bos = new BufferedOutputStream(fs);
-            bos.write(IV.getIV()); //HERE!!! This might not work as intended.
+            bos.write(IV.getIV()); 
             bos.close();
 
-            System.out.println("IV SAVED! Message is - " + ivByte); //Proof that the iv has been saved
+            System.out.println("IV SAVED! IV is: " + ivByte); //Proof that the iv has been saved
 
             //if it fails for whatever reason, it will output an error message in the system output field.
         } catch (IOException e) {
@@ -141,24 +141,24 @@ public class AES {                                      //create class
     }
 
     //Grabs the data/CypherText from the file
-    public String loadFile() { //TODO: Rename this to readFromFile()
+    public String loadFile() { 
         File f;
         FileInputStream fStream;
         ObjectInputStream oStream;
         String message = null;
         
-        //program will load the output.dat file that stores the message
+        //program will load the output.dat file that stores the entry
         try {
             f = new File("output.dat");
             fStream = new FileInputStream(f);
 
             oStream = new ObjectInputStream(fStream);
 
-            //message will equal the info inside the file, converted to a String
+            //entry will equal the info inside the file, converted to a String
             message = (String) oStream.readObject();
             oStream.close();
 
-            System.out.println("Its loaded! Message is - " + message);          //Proof program is loading message
+            System.out.println("Its loaded! Diary Entry is: " + message);          //Proof program is loading diary entry
 
 
             //Reads in the byte info of the IV from the iv.dat file

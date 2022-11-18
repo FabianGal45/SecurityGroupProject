@@ -32,7 +32,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         initComponents();
 
     }
-    String message = "";        //Input Message
+    String message = "";        //Input Entry
     String aesMessage = "";     //Encrypted Message
     String Okey = "";           //Output Key
     String uKey = "";           //Input Key
@@ -222,25 +222,25 @@ public class DiaryGUI extends javax.swing.JFrame {
 
     private void loadBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBTNActionPerformed
 
-        aesMessage = a.loadFile();                                                            //Load encrypted message from file
+        aesMessage = a.loadFile();                                                            //Load encrypted entry from file
 
-        outputTF.setText(outputTF.getText() + "Message extracted from file - " + aesMessage + "\n");    //Print encrypted message in output box
+        outputTF.setText(outputTF.getText() + "Diary Entry extracted from file - " + aesMessage + "\n");    //Print encrypted entry in output box
         if(aesMessage==null){
-            outputTF.append("The AES check has failed! The message has been tampered with.\n");   
+            outputTF.append("The AES check has failed! Something has been tampered with.\n");   
         }
     }//GEN-LAST:event_loadBTNActionPerformed
 
     private void encryptBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encryptBTNActionPerformed
         message = inputTF.getText();                                                                        //Grab text from text field
 
-        if (message == "") {                                                                                //Check if message exists
+        if (message == "") {                                                                                //Check if entry exists
             outputTF.setText(outputTF.getText() + "There is nothing to encrypt!\n");                        //If not, print error
         } else {
 
             aesMessage = a.encrypt(message);                                             //use method to return encrypted input
             s.saveToFile(s.encrypt(message));                                                       //encrypts and saves to file
             Okey = a.getKey();                                                                        //use method to grab key
-            outputTF.setText(outputTF.getText() + "Encrypted Diary Entry: " + aesMessage + "\n");                    //print encrypted message to output
+            outputTF.setText(outputTF.getText() + "Encrypted Diary Entry: " + aesMessage + "\n");                    //print encrypted entry to output
             JOptionPane.showMessageDialog(null, "The key is: " + Okey + "\nThe key was saved to your clipboard");   //JOptionPane the key
             StringSelection stringSelection = new StringSelection(Okey);                          //String select Okey
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();                     //
@@ -266,7 +266,7 @@ public class DiaryGUI extends javax.swing.JFrame {
         uKey = JOptionPane.showInputDialog(null, "Please enter your key:\n"); //Ask key from user
         String decryptedMessage = null;
         try {
-            decryptedMessage = a.decrypt(uKey);//Decrypt the original message. 
+            decryptedMessage = a.decrypt(uKey);//Decrypt the original entry. 
         } catch (IllegalArgumentException | NullPointerException e) {
             outputTF.append("The key does not match!\n");
         } 
@@ -277,9 +277,9 @@ public class DiaryGUI extends javax.swing.JFrame {
         if (s.compare(hashOne, hashTwo)) { //if the hashes match then display the message back where it can be edited again.
             inputTF.setText(decryptedMessage);
 
-            outputTF.append("Message decrypted\n");
+            outputTF.append("Diary Entry decrypted\n");
         } else {
-            outputTF.append("The SHA check has Failed! The message has been tampered with.\n");
+            outputTF.append("The SHA check has Failed! Something has been tampered with.\n");
 
         }
 
