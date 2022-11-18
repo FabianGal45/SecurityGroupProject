@@ -36,7 +36,8 @@ public class AES {                                      //create class
     private IvParameterSpec IV;      //IV, same as key but can be overread from loading file
     private final String algorithm;                     //Type of algorithm used, CBC
     private String ivByte;
-
+    
+    //Methods adapted from: https://www.baeldung.com/java-aes-encryption-decryption
     public AES() throws NoSuchAlgorithmException {
         SecretKey = generateKey(128);
         IV = generateIv();
